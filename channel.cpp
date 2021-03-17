@@ -5,6 +5,7 @@ Channel::Channel() {
     saw = false;
     pulse = false;
     sine_level = 0.0;
+    high_pass_filter.setFilterMode(Filter::FILTER_MODE_HIGHPASS);
 }
 
 Channel::~Channel(){
@@ -44,9 +45,10 @@ float Channel::sample() {
     float s = 0.0;
     uint8_t i;
     for(i = 0; i < OSC_COUNT; i++) {
+        oscillators[i].cycle();
+    }
+    for(i = 0; i < OSC_COUNT; i++) {
         if(oscillators[i].gate) {
-            oscillators[i].cycle();
-
 
             if(pulse){
                 s += oscillators[i].pulse_amplitude;
@@ -54,7 +56,8 @@ float Channel::sample() {
             if(saw){
                 s += oscillators[i].saw_amplitude;
             }
-            s = (float) filter.process(s);
+            s = (float) high_pass_filter.process(s);
+            s = (float) low_pass_filter.process(s);
             if(sine_level > 0.0){
                 s += oscillators[i].sine_amplitude * sine_level;
             }
@@ -85,10 +88,26 @@ void Channel::setPulseWidth(int p){
     }
 }
 
-void Channel::setFilterCutoff(int c){
-    filter.setCutoff(c / 100.0);
+void Channel::setLPFCutoff(int c){
+    double cutoff = std::pow(c / 255.0, 2);
+    if(cutoff > 0.998) cutoff = 0.999;
+    low_pass_filter.setCutoff(cutoff);
 }
 
-void Channel::setFilterResonance(int r){
-    filter.setResonance((double)r / 100.0);
+void Channel::setLPFResonance(int r){
+    double resonance = r / 100.0;
+    if(resonance > 0.998) resonance = 0.999;
+    low_pass_filter.setResonance(resonance);
+}
+
+void Channel::setHPFCutoff(int c){
+    double cutoff = std::pow(c / 255.0, 2);
+    if(cutoff > 0.998) cutoff = 0.999;
+    high_pass_filter.setCutoff(cutoff);
+}
+
+void Channel::setHPFResonance(int r){
+    double resonance = r / 100.0;
+    if(resonance > 0.998) resonance = 0.999;
+    high_pass_filter.setResonance(resonance);
 }

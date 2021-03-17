@@ -19,6 +19,9 @@ void CSJack::ConnectControls(Channel *c){
     connect(ui->sawToggle, SIGNAL(toggled(bool)), ch, SLOT(setSaw(bool)));
     connect(ui->sineLevel, SIGNAL(valueChanged(int)), ch, SLOT(setSineLevel(int)));
     connect(ui->pulseWidth, SIGNAL(valueChanged(int)), ch, SLOT(setPulseWidth(int)));
-    connect(ui->filterCutoff, SIGNAL(valueChanged(int)), ch, SLOT(setFilterCutoff(int)));
-    connect(ui->filterResonance, SIGNAL(valueChanged(int)), ch, SLOT(setFilterResonance(int)));
+    connect(ui->lpf_cutoff, SIGNAL(valueChanged(int)), ch, SLOT(setLPFCutoff(int)));
+    connect(ui->lpf_resonance, SIGNAL(valueChanged(int)), ch, SLOT(setLPFResonance(int)));
+    connect(ui->hpf_cutoff, SIGNAL(valueChanged(int)), ch, SLOT(setHPFCutoff(int)));
+    connect(ui->hpf_resonance, SIGNAL(valueChanged(int)), ch, SLOT(setHPFResonance(int)));
+    ui->hpf_cutoff->setValue(0);
 }

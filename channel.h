@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <QObject>
+#include <math.h>
 #include "oscillator.h"
 #include "filter.h"
 #ifndef CHANNEL_H
@@ -36,7 +37,7 @@ class Channel : public QObject {
 
     Oscillator oscillators[OSC_COUNT];
 
-    Filter filter;
+    Filter low_pass_filter, high_pass_filter;
 
     bool saw;
     bool pulse;
@@ -58,8 +59,10 @@ public slots:
     void setPulse(bool s);
     void setSineLevel(int v);
     void setPulseWidth(int p);
-    void setFilterCutoff(int c);
-    void setFilterResonance(int r);
+    void setLPFCutoff(int c);
+    void setLPFResonance(int r);
+    void setHPFCutoff(int c);
+    void setHPFResonance(int r);
 };
 
 #endif // CHANNEL_H
