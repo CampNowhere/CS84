@@ -10,7 +10,7 @@ Oscillator::Oscillator() {
 }
 void Oscillator::set_sample_rate(uint32_t rate) {
     sample_rate = rate;
-    sample_period = 1.0 / (double) rate;
+    sample_period = 1.0 / static_cast<double>(rate);
 }
 
 void Oscillator::cycle() {

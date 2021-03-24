@@ -5,6 +5,7 @@ Channel::Channel() {
     saw = false;
     pulse = false;
     sine_level = 0.0;
+    detune = 0.0;
     high_pass_filter.setFilterMode(Filter::FILTER_MODE_HIGHPASS);
 }
 
@@ -58,7 +59,7 @@ float Channel::sample() {
             }
             s = (float) high_pass_filter.process(s);
             s = (float) low_pass_filter.process(s);
-            if(sine_level > 0.0){
+            if(sine_level > 0.0f){
                 s += oscillators[i].sine_amplitude * sine_level;
             }
 
@@ -84,7 +85,7 @@ void Channel::setSineLevel(int v){
 void Channel::setPulseWidth(int p){
     uint8_t i;
     for(i = 0; i < OSC_COUNT; i++) {
-        oscillators[i].pulse_width_duty_cycle = p / 100.0;
+        oscillators[i].pulse_width_duty_cycle = p / 100.0f;
     }
 }
 
@@ -110,4 +111,11 @@ void Channel::setHPFResonance(int r){
     double resonance = r / 100.0;
     if(resonance > 0.998) resonance = 0.999;
     high_pass_filter.setResonance(resonance);
+}
+
+void Channel::setDetune(int d) {
+    char valstr[10];
+    detune = float(d) / 100;
+    sprintf(valstr, "%.02f", detune);
+    emit detuneSet(QString(valstr));
 }

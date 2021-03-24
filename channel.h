@@ -45,6 +45,7 @@ class Channel : public QObject {
     float pulse_width_modulation;
     float pulse_width_modulation_speed;
     float sine_level;
+    float detune;
     uint32_t sample_rate;
 public:
     Channel();
@@ -53,6 +54,8 @@ public:
     void note_on(uint8_t note, uint8_t vel);
     void note_off(uint8_t note, uint8_t vel);
     float sample();
+signals:
+    void detuneSet(QString);
 
 public slots:
     void setSaw(bool s);
@@ -63,6 +66,7 @@ public slots:
     void setLPFResonance(int r);
     void setHPFCutoff(int c);
     void setHPFResonance(int r);
+    void setDetune(int d);
 };
 
 #endif // CHANNEL_H

@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     CSJack w;
     ch = new Channel;
-    w.ConnectControls(ch);
+    w.ConnectControls(ch, nullptr);
     ch->set_sample_rate(sample_rate);
     jack_activate(client);
     w.show();

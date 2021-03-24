@@ -15,9 +15,9 @@ class CSJack : public QMainWindow
     Channel * ch;
 
 public:
-    explicit CSJack(QWidget *parent = 0);
+    explicit CSJack(QWidget *parent = nullptr);
     ~CSJack();
-    void ConnectControls(Channel * c);
+    void ConnectControls(Channel * c, Channel * c2);
 
 private:
     Ui::CSJack *ui;
