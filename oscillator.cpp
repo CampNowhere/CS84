@@ -39,3 +39,7 @@ void Oscillator::update_saw(double t){
     saw_amplitude = -(2.0 / M_PI) * std::atan(1.0/std::tan((M_PI * t) / period)) * voice_gain;
     phased_saw_amplitude = -(2.0 / M_PI) * std::atan(1.0/std::tan(((M_PI * t) / period) + M_PI * pulse_width_duty_cycle)) * voice_gain;
 }
+
+void Oscillator::update_inverse_saw(double t){
+    inverse_saw_amplitude = (2.0 / M_PI) * std::atan(1.0/std::tan((M_PI * t) / period)) * voice_gain;
+}
