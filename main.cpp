@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <QApplication>
 
-Channel * ch;
+Channel * ch, * ch2;
 jack_port_t * midiport;
 jack_port_t * audioport;
 
@@ -21,9 +21,11 @@ void process_midi_event(void * buf){
             switch (event_code) {
             case 8:
                 ch->note_off(event.buffer[1], event.buffer[2]);
+                ch2->note_off(event.buffer[1], event.buffer[2]);
                 break;
             case 9:
                 ch->note_on(event.buffer[1], event.buffer[2]);
+                ch2->note_on(event.buffer[1], event.buffer[2]);
                 break;
             default:
                 break;
@@ -40,6 +42,7 @@ int process(jack_nframes_t nframes, void * arg) {
     }
     for(int i = 0; i < nframes; i++) {
         audiobuffer[i] = ch->sample();
+        audiobuffer[i] += ch2->sample();
     }
     return 0;
 }
@@ -79,8 +82,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     CSJack w;
     ch = new Channel;
-    w.ConnectControls(ch, nullptr);
+    ch2 = new Channel;
+    w.ConnectControls(ch, ch2);
     ch->set_sample_rate(sample_rate);
+    ch2->set_sample_rate(sample_rate);
     jack_activate(client);
     w.show();
 

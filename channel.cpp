@@ -23,11 +23,13 @@ void Channel::set_sample_rate(uint32_t rate) {
 
 void Channel::note_on(uint8_t note, uint8_t vel) {
     uint8_t i;
+    double note_freq = midi_note_freqs[note];
+    note_freq = detunedFreq(note_freq, detune);
     for(i = 0; i < OSC_COUNT; i++) {
         if(!oscillators[i].gate) {
             oscillators[i].gate = true;
             oscillators[i].note_id = note;
-            oscillators[i].set_frequency(midi_note_freqs[note]);
+            oscillators[i].set_frequency(note_freq);
             return;
         }
     }
@@ -118,4 +120,8 @@ void Channel::setDetune(int d) {
     detune = float(d) / 100;
     sprintf(valstr, "%.02f", detune);
     emit detuneSet(QString(valstr));
+}
+
+double Channel::detunedFreq(double freq, double cents) {
+    return freq * pow(2.0, (cents / 1200.0));
 }

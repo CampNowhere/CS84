@@ -5,7 +5,7 @@ Oscillator::Oscillator() {
     set_frequency(440);
     clock = 0;
     gate = false;
-    voice_gain = 0.125;
+    voice_gain = 0.1f;
     pulse_width_duty_cycle = 0.5;
 }
 void Oscillator::set_sample_rate(uint32_t rate) {

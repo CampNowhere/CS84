@@ -8,7 +8,7 @@
 #define CHANNEL_H
 #define OSC_COUNT 8
 
-const float midi_note_freqs[128] = {
+const double midi_note_freqs[128] = {
     8.18, 8.66, 9.18, 9.72, 10.30, 10.91, 11.56,
     12.25, 12.98, 13.75, 14.57, 15.43, 16.35, 17.32,
     18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96,
@@ -45,7 +45,7 @@ class Channel : public QObject {
     float pulse_width_modulation;
     float pulse_width_modulation_speed;
     float sine_level;
-    float detune;
+    double detune;
     uint32_t sample_rate;
 public:
     Channel();
@@ -67,6 +67,9 @@ public slots:
     void setHPFCutoff(int c);
     void setHPFResonance(int r);
     void setDetune(int d);
+
+private:
+    double detunedFreq(double freq, double cents);
 };
 
 #endif // CHANNEL_H
