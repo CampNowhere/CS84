@@ -28,13 +28,15 @@ SOURCES += main.cpp\
     cs80.cpp \
     channel.cpp \
     oscillator.cpp \
-    filter.cpp
+    filter.cpp \
+    adsr.cpp
 
 HEADERS  += csjack.h \
     cs80.h \
     channel.h \
     oscillator.h \
-    filter.h
+    filter.h \
+    adsr.h
 
 FORMS    += csjack.ui
 
