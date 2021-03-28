@@ -1,15 +1,16 @@
 #include <stdint.h>
+#include <QObject>
 #include "channel.h"
-#ifndef CS80_H
-#define CS80_H
+#ifndef CS84_H
+#define CS84_H
 
-class CS80 {
+class CS84 : public QObject {
+    Q_OBJECT
+
     Channel channels[2];
-
-    uint32_t sample_rate;
-
 public:
-    CS80();
+    CS84();
+    ~CS84();
     void set_sample_rate(uint32_t);
     void set_note_on(uint8_t);
     void set_note_off(uint8_t);
@@ -19,6 +20,7 @@ public:
 
 private:
     float timer;
+    uint32_t sample_rate;
 };
 
 #endif // CS80_H

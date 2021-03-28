@@ -25,18 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         csjack.cpp \
-    cs80.cpp \
     channel.cpp \
     oscillator.cpp \
     filter.cpp \
-    adsr.cpp
+    adsr.cpp \
+    voice.cpp \
+    cs84.cpp
 
 HEADERS  += csjack.h \
-    cs80.h \
     channel.h \
     oscillator.h \
     filter.h \
-    adsr.h
+    adsr.h \
+    voice.h \
+    cs84.h
 
 FORMS    += csjack.ui
 

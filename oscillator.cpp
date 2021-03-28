@@ -4,20 +4,15 @@
 Oscillator::Oscillator() {
     set_frequency(440);
     clock = 0;
-    gate = false;
-    voice_gain = 0.1f;
     pulse_width_duty_cycle = 0.5;
 }
+
 void Oscillator::set_sample_rate(uint32_t rate) {
-    sample_rate = rate;
     sample_period = 1.0 / static_cast<double>(rate);
 }
 
 void Oscillator::cycle() {
     clock += sample_period;
-    update_sine(clock);
-    update_pulse(clock);
-    update_saw(clock);
 }
 
 void Oscillator::set_frequency(double f) {
@@ -25,21 +20,30 @@ void Oscillator::set_frequency(double f) {
     period = 1.0 / f;
 }
 
-void Oscillator::update_sine(double t){
-    sine_amplitude = std::sin(2 * M_PI * frequency * t) * voice_gain;
+double Oscillator::sample_sine(){
+    return std::sin(2 * M_PI * frequency * clock);
 }
 
-void Oscillator::update_pulse(double t){
-    //pulse_amplitude = std::sin(2 * M_PI * frequency * t);
-    //pulse_amplitude = (pulse_amplitude < 0) ? voice_gain : -(voice_gain);
-    pulse_amplitude = saw_amplitude - phased_saw_amplitude;
+double Oscillator::sample_pulse(){
+    double phased_saw_amplitude = -(2.0 / M_PI) * std::atan(1.0/std::tan(((M_PI * clock) / period) + M_PI * pulse_width_duty_cycle));
+    return sample_saw() - phased_saw_amplitude;
 }
 
-void Oscillator::update_saw(double t){
-    saw_amplitude = -(2.0 / M_PI) * std::atan(1.0/std::tan((M_PI * t) / period)) * voice_gain;
-    phased_saw_amplitude = -(2.0 / M_PI) * std::atan(1.0/std::tan(((M_PI * t) / period) + M_PI * pulse_width_duty_cycle)) * voice_gain;
+double Oscillator::sample_saw(){
+    return -(2.0 / M_PI) * std::atan(1.0/std::tan((M_PI * clock) / period));
+
 }
 
-void Oscillator::update_inverse_saw(double t){
-    inverse_saw_amplitude = (2.0 / M_PI) * std::atan(1.0/std::tan((M_PI * t) / period)) * voice_gain;
+double Oscillator::sample_inverse_saw(){
+    return (2.0 / M_PI) * std::atan(1.0/std::tan((M_PI * clock) / period));
+}
+
+void Oscillator::set_pulse_width(double p){
+    if(p > 0.95) {
+        pulse_width_duty_cycle = 0.95;
+    } else if (p < 0.5) {
+        pulse_width_duty_cycle = 0.5;
+    } else {
+        pulse_width_duty_cycle = p;
+    }
 }

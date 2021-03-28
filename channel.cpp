@@ -16,20 +16,19 @@ Channel::~Channel(){
 void Channel::set_sample_rate(uint32_t rate) {
     sample_rate = rate;
     uint8_t i;
-    for(i = 0; i < OSC_COUNT; i++) {
-        oscillators[i].set_sample_rate(sample_rate);
+    for(i = 0; i < VOICE_COUNT; i++) {
+        voices[i].set_sample_rate(sample_rate);
+        voices[i].assign_detune(&detune);
     }
 }
 
 void Channel::note_on(uint8_t note, uint8_t vel) {
     uint8_t i;
-    double note_freq = midi_note_freqs[note];
-    note_freq = detunedFreq(note_freq, detune);
-    for(i = 0; i < OSC_COUNT; i++) {
-        if(!oscillators[i].gate) {
-            oscillators[i].gate = true;
-            oscillators[i].note_id = note;
-            oscillators[i].set_frequency(note_freq);
+    for(i = 0; i < VOICE_COUNT; i++) {
+        if(!voices[i].gated()) {
+            voices[i].assign_note(note);
+            voices[i].gate();
+
             return;
         }
     }
@@ -115,13 +114,14 @@ void Channel::setHPFResonance(int r){
     high_pass_filter.setResonance(resonance);
 }
 
-void Channel::setDetune(int d) {
-    char valstr[10];
-    detune = float(d) / 100;
-    sprintf(valstr, "%.02f", detune);
-    emit detuneSet(QString(valstr));
+void Channel::setDetune(double cents) {
+    detune = cents;
 }
 
 double Channel::detunedFreq(double freq, double cents) {
     return freq * pow(2.0, (cents / 1200.0));
+}
+
+void Channel::assignPitchBendCents(double *p) {
+    pitch_bend_cents = p;
 }
